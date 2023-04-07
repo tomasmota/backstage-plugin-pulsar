@@ -42,8 +42,6 @@ export const PulsarPage = () => {
 
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>Pulsar Information</Typography>
-      
       <Box mb={2}>
         <Typography variant="h5">Topics</Typography>
         <Paper>
