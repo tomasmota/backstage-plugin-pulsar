@@ -139,3 +139,6 @@ site
 #yarn
 .yarn/
 .yarnrc.yml
+
+#generated when testing
+fill-topic.js
