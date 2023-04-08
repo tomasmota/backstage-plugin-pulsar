@@ -8,7 +8,7 @@ import {
   HeaderLabel,
   SupportButton,
 } from '@backstage/core-components';
-import { PulsarPage } from '../PulsarPage';
+import { EntityPulsarContent } from '../EntityPulsarContent';
 
 export const ExampleComponent = () => (
   <Page themeId="tool">
@@ -18,11 +18,14 @@ export const ExampleComponent = () => (
     </Header>
     <Content>
       <ContentHeader title="Plugin title">
-        <SupportButton>This page displays any information regarding your service's usage of Pulsar</SupportButton>
+        <SupportButton>
+          This page displays any information regarding your service's usage of
+          Pulsar
+        </SupportButton>
       </ContentHeader>
       <Grid container spacing={3} direction="column">
         <Grid item>
-          <PulsarPage />
+          <EntityPulsarContent />
         </Grid>
       </Grid>
     </Content>

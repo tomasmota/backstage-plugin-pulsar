@@ -63,7 +63,7 @@ const fakeData = {
   },
 };
 
-export const PulsarPage = () => {
+export const EntityPulsarContent = () => {
   const [messageCount, setMessageCount] = useState<number | null>(null);
 
   useEffect(() => {
