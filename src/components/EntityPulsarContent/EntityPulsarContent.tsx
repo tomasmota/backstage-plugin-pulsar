@@ -26,7 +26,7 @@ async function getTopicStats(tenant: string, namespace: string, topic: string) :
 }
 
 export const EntityPulsarContent = () => {
-  const [stats, setStats] = useState<TopicStats|{}>({});
+  const [stats, setStats] = useState<TopicStats|null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,7 +34,7 @@ export const EntityPulsarContent = () => {
         setStats(await getTopicStats('public', 'default', 'my-topic'));
       } catch (error) {
         console.error('Error fetching message count:', error);
-        setStats({});
+        setStats(null);
       }
     };
 

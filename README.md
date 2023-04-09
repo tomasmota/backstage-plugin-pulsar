@@ -8,3 +8,8 @@ Welcome to the apache-pulsar plugin!
 - Optionally fill up with some messages by running fill-topic.ts
 - Go into a Component that has the pulsar annotation pointing to this topic and go into the Pulsar tab
 
+## TODO
+- Figure out authentication
+- Decide what data to show
+- Make it look nice
+
