@@ -9,72 +9,32 @@ import {
   TableRow,
   TableCell,
 } from '@material-ui/core';
+import { TopicStats } from './types';
 
-type PublisherStats = {
-  msgRateIn: number;
-};
-
-type TopicStats = {
-  publishers: PublisherStats[];
-};
-
-async function getPulsarTopicMessageCount(topic: string): Promise<number> {
+async function getTopicStats(tenant: string, namespace: string, topic: string) : Promise<TopicStats> {  
   const pulsarAdminApiBaseUrl = 'http://localhost:7007/api/proxy/pulsar/';
-  const url = `${pulsarAdminApiBaseUrl}admin/v2/persistent/public/default/${topic}/stats`; // TODO: Parameterize tenant and namespace
+  const url = `${pulsarAdminApiBaseUrl}admin/v2/persistent/${tenant}/${namespace}/${topic}/stats`; 
 
   const response = await fetch(url);
 
   if (response.ok) {
-    const data: TopicStats = await response.json();
-    console.log(data)
-    const messageCount = data.publishers.reduce(
-      (count, publisher) => count + publisher.msgRateIn,
-      0,
-    );
-    return messageCount;
+    const stats: TopicStats = await response.json();
+    return stats;
   } else {
     throw new Error('Failed to fetch Pulsar topic stats');
   }
 }
 
-const fakeData = {
-  topics: [
-    {
-      name: 'topic-1',
-      producers: 5,
-      subscribers: 3,
-      messagesPerSecond: 100,
-      bytesPerSecond: 2048,
-    },
-    {
-      name: 'topic-2',
-      producers: 2,
-      subscribers: 1,
-      messagesPerSecond: 50,
-      bytesPerSecond: 1024,
-    },
-  ],
-  throughput: {
-    ingress: 150,
-    egress: 120,
-  },
-  storage: {
-    used: 50,
-    available: 200,
-  },
-};
-
 export const EntityPulsarContent = () => {
-  const [messageCount, setMessageCount] = useState<number | null>(null);
+  const [stats, setStats] = useState<TopicStats|{}>({});
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const count = await getPulsarTopicMessageCount('my-topic');
-        setMessageCount(count);
+        setStats(await getTopicStats('public', 'default', 'my-topic'));
       } catch (error) {
         console.error('Error fetching message count:', error);
-        setMessageCount(null);
+        setStats({});
       }
     };
 
@@ -130,12 +90,40 @@ export const EntityPulsarContent = () => {
 
       <Box mb={2}>
         <Typography variant="h6">Messages per second</Typography>
-        {messageCount !== null ? (
-          <Typography variant="body1">{messageCount}</Typography>
+        {stats !== null ? (
+          <Typography variant="body1">{Math.round(stats.msgRateIn)}</Typography>
         ) : (
-          <Typography variant="body1">Error fetching message count</Typography>
+          <Typography variant="body1">Error fetching message rate</Typography>
         )}
       </Box>
     </Box>
   );
+};
+
+// TODO: Remove
+const fakeData = {
+  topics: [
+    {
+      name: 'topic-1',
+      producers: 5,
+      subscribers: 3,
+      messagesPerSecond: 100,
+      bytesPerSecond: 2048,
+    },
+    {
+      name: 'topic-2',
+      producers: 2,
+      subscribers: 1,
+      messagesPerSecond: 50,
+      bytesPerSecond: 1024,
+    },
+  ],
+  throughput: {
+    ingress: 150,
+    egress: 120,
+  },
+  storage: {
+    used: 50,
+    available: 200,
+  },
 };
