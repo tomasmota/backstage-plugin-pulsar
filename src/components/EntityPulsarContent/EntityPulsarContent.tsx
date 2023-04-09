@@ -12,7 +12,7 @@ import {
 import { TopicStats } from './types';
 
 async function getTopicStats(tenant: string, namespace: string, topic: string) : Promise<TopicStats> {  
-  const pulsarAdminApiBaseUrl = 'http://localhost:7007/api/proxy/pulsar/';
+  const pulsarAdminApiBaseUrl = 'http://localhost:7007/api/proxy/pulsar/'; // Using proxy to localhost:8080 in this case
   const url = `${pulsarAdminApiBaseUrl}admin/v2/persistent/${tenant}/${namespace}/${topic}/stats`; 
 
   const response = await fetch(url);
@@ -25,13 +25,21 @@ async function getTopicStats(tenant: string, namespace: string, topic: string) :
   }
 }
 
-export const EntityPulsarContent = () => {
+/** @public */
+export type EntityPulsarContentProps = {
+  tenant?: string = 'public';
+  namespace?: string;
+  topic: string;
+};
+
+/** @public */
+export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
   const [stats, setStats] = useState<TopicStats|null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setStats(await getTopicStats('public', 'default', 'my-topic'));
+        setStats(await getTopicStats(props.tenant ?? 'public', props.namespace ?? 'default', props.topic));
       } catch (error) {
         console.error('Error fetching message count:', error);
         setStats(null);
@@ -45,7 +53,7 @@ export const EntityPulsarContent = () => {
   return (
     <Box>
       <Box mb={2}>
-        <Typography variant="h5">Topics</Typography>
+        <Typography variant="h5">Information for topic</Typography>
         <Paper>
           <Table size="small">
             <TableHead>
