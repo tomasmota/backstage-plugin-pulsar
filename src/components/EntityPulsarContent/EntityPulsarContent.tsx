@@ -27,7 +27,7 @@ async function getTopicStats(tenant: string, namespace: string, topic: string) :
 
 /** @public */
 export type EntityPulsarContentProps = {
-  tenant?: string = 'public';
+  tenant?: string;
   namespace?: string;
   topic: string;
 };
