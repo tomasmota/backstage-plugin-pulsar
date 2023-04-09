@@ -5,24 +5,24 @@ async function sleep(ms: number): Promise<void> {
 }
 
 async function runProducer(producer: Producer): Promise<void> {
-  for (let i = 0; i < 10000; i++) {
+  while(true) {
     await sleep(50);
     await producer.send({
-      data: Buffer.from(`Hello, Pulsar, message ${i}`),
+      data: Buffer.from(`Hello Pulsar`),
     });
   }
-  await producer.flush();
-  await producer.close();
+  // await producer.flush();
+  // await producer.close();
 }
 
 async function runSubscriber(consumer: Consumer): Promise<void> {
-  for (let i = 0; i < 10000; i++) {
+  while(true) {
     const msg = await consumer.receive();
     console.log(`Received message: ${msg.getData().toString()}`);
     consumer.acknowledge(msg);
   }
-  await consumer.unsubscribe();
-  await consumer.close();
+  // await consumer.unsubscribe();
+  // await consumer.close();
 }
 
 (async () => {
