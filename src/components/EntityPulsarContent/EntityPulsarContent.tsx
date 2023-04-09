@@ -19,13 +19,14 @@ type TopicStats = {
 };
 
 async function getPulsarTopicMessageCount(topic: string): Promise<number> {
-  const pulsarAdminApiBaseUrl = 'http://localhost:8080/';
+  const pulsarAdminApiBaseUrl = 'http://localhost:7007/api/proxy/pulsar/';
   const url = `${pulsarAdminApiBaseUrl}admin/v2/persistent/public/default/${topic}/stats`; // TODO: Parameterize tenant and namespace
 
   const response = await fetch(url);
 
   if (response.ok) {
     const data: TopicStats = await response.json();
+    console.log(data)
     const messageCount = data.publishers.reduce(
       (count, publisher) => count + publisher.msgRateIn,
       0,
@@ -69,7 +70,7 @@ export const EntityPulsarContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const count = await getPulsarTopicMessageCount('bla');
+        const count = await getPulsarTopicMessageCount('my-topic');
         setMessageCount(count);
       } catch (error) {
         console.error('Error fetching message count:', error);
@@ -128,7 +129,7 @@ export const EntityPulsarContent = () => {
       </Box>
 
       <Box mb={2}>
-        <Typography variant="h6">Number of Messages:</Typography>
+        <Typography variant="h6">Messages per second</Typography>
         {messageCount !== null ? (
           <Typography variant="body1">{messageCount}</Typography>
         ) : (
