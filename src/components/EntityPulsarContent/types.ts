@@ -1,14 +1,14 @@
-export type Publisher = {
-  accessMode: string;
-  msgRateIn: number;
-  msgThroughputIn: number;
-  averageMsgSize: number;
-  address: string;
-  producerName: string;
-  connectedSince: string;
-  clientVersion: string;
-};
-//
+// export type Publisher = {
+//   accessMode: string;
+//   msgRateIn: number;
+//   msgThroughputIn: number;
+//   averageMsgSize: number;
+//   address: string;
+//   producerName: string;
+//   connectedSince: string;
+//   clientVersion: string;
+// };
+
 // export type Consumer = {
 //   msgRateOut: number;
 //   msgThroughputOut: number;
@@ -81,7 +81,7 @@ export type Publisher = {
 export type TopicStats = {
   msgRateIn: number;
   // msgThroughputIn: number;
-  // msgRateOut: number;
+  msgRateOut: number;
   // msgThroughputOut: number;
   // bytesInCounter: number;
   // msgInCounter: number;
@@ -97,7 +97,7 @@ export type TopicStats = {
   // lastOffloadLedgerId: number;
   // lastOffloadSuccessTimeStamp: number;
   // lastOffloadFailureTimeStamp: number;
-  publishers: Publisher[];
+  // publishers: Publisher[];
   // waitingPublishers: number;
   // subscriptions: Record<string, Subscription>;
   // replication: Record<string, unknown>;

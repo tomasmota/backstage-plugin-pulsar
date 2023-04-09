@@ -25,6 +25,8 @@ async function runSubscriber(consumer: Consumer): Promise<void> {
   // await consumer.close();
 }
 
+const TOPIC_NAME = 'trash';
+
 (async () => {
   const client = new Client({
     serviceUrl: 'pulsar://localhost:6650',
@@ -33,14 +35,14 @@ async function runSubscriber(consumer: Consumer): Promise<void> {
 
   // Producer
   const producer = await client.createProducer({
-    topic: 'my-topic',
+    topic: TOPIC_NAME,
   });
   console.log('producer created');
   runProducer(producer);
 
   // Subscriber
   const subscriber = await client.subscribe({
-    topic: 'my-topic',
+    topic: TOPIC_NAME,
     subscription: 'my-subscription',
   });
   console.log('subscriber created');
