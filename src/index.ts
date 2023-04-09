@@ -1,1 +1,1 @@
-export { apachePulsarPlugin, ApachePulsarPage } from './plugin';
+export { apachePulsarPlugin, EntityPulsarContent } from './plugin';

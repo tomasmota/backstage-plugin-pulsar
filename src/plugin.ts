@@ -9,11 +9,11 @@ export const apachePulsarPlugin = createPlugin({
   },
 });
 
-export const ApachePulsarPage = apachePulsarPlugin.provide(
+export const EntityPulsarContent = apachePulsarPlugin.provide(
   createRoutableExtension({
-    name: 'ApachePulsarPage',
+    name: 'EntityPulsarContent',
     component: () =>
-      import('./components/ExampleComponent').then(m => m.ExampleComponent),
+      import('./components/EntityPulsarContent').then(m => m.EntityPulsarContent),
     mountPoint: rootRouteRef,
   }),
 );
