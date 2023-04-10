@@ -15,10 +15,21 @@ async function runProducer(producer: Producer): Promise<void> {
   // await producer.close();
 }
 
-async function runSubscriber(consumer: Consumer): Promise<void> {
+async function runConsumer1(consumer: Consumer): Promise<void> {
   while(true) {
     const msg = await consumer.receive();
-    console.log(`Received message: ${msg.getData().toString()}`);
+    console.log(`Consumer 1 Received message: ${msg.getData().toString()}`);
+    consumer.acknowledge(msg);
+  }
+  // await consumer.unsubscribe();
+  // await consumer.close();
+}
+
+async function runConsumer2(consumer: Consumer): Promise<void> {
+  while(true) {
+    await sleep(300);
+    const msg = await consumer.receive();
+    console.log(`Consumer 2 Received message: ${msg.getData().toString()}`);
     consumer.acknowledge(msg);
   }
   // await consumer.unsubscribe();
@@ -38,17 +49,22 @@ const TOPIC_NAME = 'trash';
     topic: TOPIC_NAME,
   });
   console.log('producer created');
-  runProducer(producer);
 
   // Subscriber
-  const subscriber = await client.subscribe({
+  const consumer1 = await client.subscribe({
+    topic: TOPIC_NAME,
+    subscription: 'my-subscription',
+  });
+
+  sleep(500)
+
+  const consumer2 = await client.subscribe({
     topic: TOPIC_NAME,
     subscription: 'my-subscription',
   });
   console.log('subscriber created');
-  runSubscriber(subscriber);
 
-  await Promise.all([runProducer(producer), runSubscriber(subscriber)]);
+  await Promise.all([runProducer(producer), runConsumer1(consumer1), runConsumer2(consumer2)]);
 
   await client.close();
 })();
