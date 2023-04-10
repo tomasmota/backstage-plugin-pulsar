@@ -11,6 +11,7 @@ Welcome to the apache-pulsar plugin!
 ## TODO
 - Figure out authentication
 - Decide what data to show
-    - Do devs care about 
 - Make it look nice
 
+## Questions
+- Could a service want to show info for several topics?
