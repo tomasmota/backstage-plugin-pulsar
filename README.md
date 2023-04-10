@@ -15,3 +15,4 @@ Welcome to the apache-pulsar plugin!
 
 ## Questions
 - Could a service want to show info for several topics?
+- Is information of both subscriptions and consumers? Or is it usually the case that 1 subscription = 1 consumer?

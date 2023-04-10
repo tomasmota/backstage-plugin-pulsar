@@ -11,29 +11,15 @@ async function runProducer(producer: Producer): Promise<void> {
       data: Buffer.from(`Hello Pulsar`),
     });
   }
-  // await producer.flush();
-  // await producer.close();
 }
 
-async function runConsumer1(consumer: Consumer): Promise<void> {
+async function runConsumer(consumer: Consumer, sleepTimeMs: number = 0): Promise<void> {
   while(true) {
     const msg = await consumer.receive();
-    console.log(`Consumer 1 Received message: ${msg.getData().toString()}`);
+    console.log(`Consumer Received message: ${msg.getData().toString()}, sleeping for ${sleepTimeMs} miliseconds`);
     consumer.acknowledge(msg);
+    await sleep(sleepTimeMs);
   }
-  // await consumer.unsubscribe();
-  // await consumer.close();
-}
-
-async function runConsumer2(consumer: Consumer): Promise<void> {
-  while(true) {
-    await sleep(300);
-    const msg = await consumer.receive();
-    console.log(`Consumer 2 Received message: ${msg.getData().toString()}`);
-    consumer.acknowledge(msg);
-  }
-  // await consumer.unsubscribe();
-  // await consumer.close();
 }
 
 const TOPIC_NAME = 'trash';
@@ -50,21 +36,19 @@ const TOPIC_NAME = 'trash';
   });
   console.log('producer created');
 
-  // Subscriber
+  // Consumer 1
   const consumer1 = await client.subscribe({
     topic: TOPIC_NAME,
-    subscription: 'my-subscription',
+    subscription: 'sub1',
   });
 
-  sleep(500)
-
+  // Consumer 2
   const consumer2 = await client.subscribe({
     topic: TOPIC_NAME,
-    subscription: 'my-subscription',
+    subscription: 'sub2',
   });
-  console.log('subscriber created');
 
-  await Promise.all([runProducer(producer), runConsumer1(consumer1), runConsumer2(consumer2)]);
+  await Promise.all([runProducer(producer), runConsumer(consumer1), runConsumer(consumer2, 500)]);
 
   await client.close();
 })();

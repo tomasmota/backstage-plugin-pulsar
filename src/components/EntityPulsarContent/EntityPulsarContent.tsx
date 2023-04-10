@@ -114,10 +114,10 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
                         ([subName, subContent]) => {
                           console.log(subName);
                           console.log(subContent);
-                          return <TableRow>
+                          return <TableRow key={subName}>
                             <TableCell>{subName}</TableCell>
                             <TableCell>
-                              {subContent.consumers[0].msgRateOut}
+                              {subContent.messageAckRate}
                             </TableCell>
                           </TableRow>;
                         },

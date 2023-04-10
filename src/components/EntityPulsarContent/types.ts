@@ -9,34 +9,13 @@ export type Publisher = {
   // clientVersion: string;
 };
 
-export type Consumer = {
-  msgRateOut: number;
+export type Subscription = {
+  msgRateOut: number; // messages being delivered to this subscription per second
   // msgThroughputOut: number;
   // bytesOutCounter: number;
   // msgOutCounter: number;
   // msgRateRedeliver: number;
-  // messageAckRate: number;
-  // chunkedMessageRate: number;
-  consumerName: string;
-  // availablePermits: number;
-  // unackedMessages: number;
-  // avgMessagesPerEntry: number;
-  // blockedConsumerOnUnackedMsgs: boolean;
-  // lastAckedTimestamp: number;
-  // lastConsumedTimestamp: number;
-  // lastConsumedFlowTimestamp: number;
-  // address: string;
-  // connectedSince: string;
-  // clientVersion: string;
-};
-
-type Subscription = {
-  // msgRateOut: number;
-  // msgThroughputOut: number;
-  // bytesOutCounter: number;
-  // msgOutCounter: number;
-  // msgRateRedeliver: number;
-  // messageAckRate: number;
+  messageAckRate: number; // messages acked per second
   // chunkedMessageRate: number;
   // msgBacklog: number;
   // backlogSize: number;
@@ -54,7 +33,7 @@ type Subscription = {
   // lastConsumedTimestamp: number;
   // lastAckedTimestamp: number;
   // lastMarkDeleteAdvancedTimestamp: number;
-  consumers: Consumer[];
+  // consumers: Consumer[];
   // isDurable: boolean;
   // isReplicated: boolean;
   // allowOutOfOrderDelivery: boolean;
