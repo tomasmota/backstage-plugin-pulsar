@@ -12,6 +12,7 @@ Welcome to the apache-pulsar plugin!
 - Figure out authentication
 - Decide what data to show
 - Make it look nice
+- Add Annotation for setting up plugin for a given component
 
 ## Questions
 - Could a service want to show info for several topics?
