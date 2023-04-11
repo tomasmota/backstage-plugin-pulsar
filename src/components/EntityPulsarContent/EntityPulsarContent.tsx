@@ -62,6 +62,11 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
   }, []);
 
   return (
+
+      // {!entityHasAdrs && (
+      //   <MissingAnnotationEmptyState annotation={ANNOTATION_ADR_LOCATION} />
+      // )}
+
     <Box>
       <Box mb={2}>
         <Typography variant="h5">Topic: {topic}</Typography>
@@ -102,7 +107,7 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
               </Grid>
               <Grid item xs={6}>
                 <Paper>
-                  <Table size="small">
+                  <Table>
                     <TableHead>
                       <TableRow>
                         <TableCell>Consumer</TableCell>
