@@ -112,8 +112,6 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
                     <TableBody>
                       {Object.entries(stats.subscriptions).map(
                         ([subName, subContent]) => {
-                          console.log(subName);
-                          console.log(subContent);
                           return <TableRow key={subName}>
                             <TableCell>{subName}</TableCell>
                             <TableCell>
