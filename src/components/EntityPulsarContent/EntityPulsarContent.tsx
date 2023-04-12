@@ -67,13 +67,13 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
       //   <MissingAnnotationEmptyState annotation={ANNOTATION_ADR_LOCATION} />
       // )}
 
-    <Box>
+    <>
       <Box mb={2}>
         <Typography variant="h5">Topic: {topic}</Typography>
       </Box>
 
       {stats !== null ? (
-        <Box>
+        <>
           <Box mb={2}>
             <Typography variant="h5">Throughput</Typography>
             <Typography>
@@ -131,10 +131,10 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
               </Grid>
             </Grid>
           </Box>
-        </Box>
+        </>
       ) : (
         <Typography variant="body1">Error fetching topic stats</Typography>
       )}
-    </Box>
+    </>
   );
 };
