@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { TopicStats } from './types';
+import { Content, ContentHeader, InfoCard, SupportButton } from '@backstage/core-components';
 
 async function getTopicStats(
   tenant: string,
@@ -62,19 +63,18 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
   }, []);
 
   return (
+    // {!entityHasAdrs && (
+    //   <MissingAnnotationEmptyState annotation={ANNOTATION_ADR_LOCATION} />
+    // )}
 
-      // {!entityHasAdrs && (
-      //   <MissingAnnotationEmptyState annotation={ANNOTATION_ADR_LOCATION} />
-      // )}
-
-    <>
-      <Box mb={2}>
-        <Typography variant="h5">Topic: {topic}</Typography>
-      </Box>
+    <Content>
+      <ContentHeader title={`Topic: ${topic}`}>
+        <SupportButton />
+      </ContentHeader>
 
       {stats !== null ? (
         <>
-          <Box mb={2}>
+          <InfoCard>
             <Typography variant="h5">Throughput</Typography>
             <Typography>
               Ingress: {Math.round(stats.msgRateIn)} msg/s
@@ -82,7 +82,7 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
             <Typography>
               Egress: {Math.round(stats.msgRateOut)} msg/s
             </Typography>
-          </Box>
+          </InfoCard>
           <Box>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -117,12 +117,12 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
                     <TableBody>
                       {Object.entries(stats.subscriptions).map(
                         ([subName, subContent]) => {
-                          return <TableRow key={subName}>
-                            <TableCell>{subName}</TableCell>
-                            <TableCell>
-                              {subContent.messageAckRate}
-                            </TableCell>
-                          </TableRow>;
+                          return (
+                            <TableRow key={subName}>
+                              <TableCell>{subName}</TableCell>
+                              <TableCell>{subContent.messageAckRate}</TableCell>
+                            </TableRow>
+                          );
                         },
                       )}
                     </TableBody>
@@ -135,6 +135,6 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
       ) : (
         <Typography variant="body1">Error fetching topic stats</Typography>
       )}
-    </>
+    </Content>
   );
 };
