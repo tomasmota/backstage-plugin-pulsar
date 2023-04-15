@@ -22,7 +22,7 @@ async function runConsumer(consumer: Consumer, sleepTimeMs: number = 0): Promise
   }
 }
 
-const TOPIC_NAME = 'trash';
+const TOPIC_NAME = 'my-topic';
 
 (async () => {
   const client = new Client({

@@ -41,10 +41,18 @@ async function getTopicStats(
   }
 }
 
-/** @public */
-export type EntityPulsarContentProps = {
-  tenant?: string;
-  namespace?: string;
+function getTopicPath(path: string | undefined): TopicPath {
+  const pathRegExp: RegExp = /^public\/default\/my-topic$/;
+  if (path === undefined || !pathRegExp.test(path)) {
+    throw Error('stuff is bad'); // make a proper error here, not sure how to display this yet
+  }
+  const [tenant, namespace, topic] = path.split('/');
+  return { tenant, namespace, topic };
+}
+
+type TopicPath = {
+  tenant: string;
+  namespace: string;
   topic: string;
 };
 
@@ -52,29 +60,40 @@ export type EntityPulsarContentProps = {
 export const ANNOTATION_PULSAR_TOPIC = 'backstage.io/pulsar-topic';
 
 /** @public */
-export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
+export const EntityPulsarContent = () => {
   const { entity } = useEntity();
-  const { tenant, namespace, topic } = props;
-  const isPulsarConfigured = Boolean(
-    entity.metadata.annotations?.[ANNOTATION_PULSAR_TOPIC]?.trim(),
-  );
+  const pulsarAnnotation =
+    entity.metadata.annotations?.[ANNOTATION_PULSAR_TOPIC]?.trim();
+  const isPulsarConfigured = Boolean(pulsarAnnotation);
 
   const { value, loading, error } = useAsync(async () => {
-    return getTopicStats(tenant ?? 'public', namespace ?? 'default', topic);
-  }, [entity]);
+    if (!isPulsarConfigured) {
+      return;
+    }
+    const tp = getTopicPath(pulsarAnnotation);
+    return getTopicStats(
+      tp.tenant ?? 'public',
+      tp.namespace ?? 'default',
+      tp.topic,
+    );
+  }, []);
 
   return (
     <Content>
       <ContentHeader title="Pulsar Topic Information">
         <SupportButton />
       </ContentHeader>
+
       {!isPulsarConfigured && (
         <MissingAnnotationEmptyState annotation={ANNOTATION_PULSAR_TOPIC} />
       )}
+
       {loading && <Progress />}
+
       {isPulsarConfigured && !loading && error && (
         <WarningPanel title="Failed to fetch ADRs" message={error?.message} />
       )}
+
       {isPulsarConfigured && !loading && !error && value !== undefined && (
         <>
           <InfoCard>
