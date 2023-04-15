@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Box,
   Grid,
@@ -10,8 +10,18 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core';
+import { useEntity } from '@backstage/plugin-catalog-react';
 import { TopicStats } from './types';
-import { Content, ContentHeader, InfoCard, SupportButton } from '@backstage/core-components';
+import {
+  Content,
+  ContentHeader,
+  InfoCard,
+  MissingAnnotationEmptyState,
+  Progress,
+  SupportButton,
+  WarningPanel,
+} from '@backstage/core-components';
+import useAsync from 'react-use/lib/useAsync';
 
 async function getTopicStats(
   tenant: string,
@@ -38,49 +48,42 @@ export type EntityPulsarContentProps = {
   topic: string;
 };
 
+//TODO: add possiblity to set more than one topic
+export const ANNOTATION_PULSAR_TOPIC = 'backstage.io/pulsar-topic';
+
 /** @public */
 export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
+  const { entity } = useEntity();
   const { tenant, namespace, topic } = props;
-  const [stats, setStats] = useState<TopicStats | null>(null);
+  const isPulsarConfigured = Boolean(
+    entity.metadata.annotations?.[ANNOTATION_PULSAR_TOPIC]?.trim(),
+  );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setStats(
-          await getTopicStats(
-            tenant ?? 'public',
-            namespace ?? 'default',
-            topic,
-          ),
-        );
-      } catch (error) {
-        console.error('Error fetching message count:', error);
-        setStats(null);
-      }
-    };
-
-    fetchData();
-  }, []);
+  const { value, loading, error } = useAsync(async () => {
+    return getTopicStats(tenant ?? 'public', namespace ?? 'default', topic);
+  }, [entity]);
 
   return (
-    // {!entityHasAdrs && (
-    //   <MissingAnnotationEmptyState annotation={ANNOTATION_ADR_LOCATION} />
-    // )}
-
     <Content>
-      <ContentHeader title={`Topic: ${topic}`}>
+      <ContentHeader title="Pulsar Topic Information">
         <SupportButton />
       </ContentHeader>
-
-      {stats !== null ? (
+      {!isPulsarConfigured && (
+        <MissingAnnotationEmptyState annotation={ANNOTATION_PULSAR_TOPIC} />
+      )}
+      {loading && <Progress />}
+      {isPulsarConfigured && !loading && error && (
+        <WarningPanel title="Failed to fetch ADRs" message={error?.message} />
+      )}
+      {isPulsarConfigured && !loading && !error && value !== undefined && (
         <>
           <InfoCard>
             <Typography variant="h5">Throughput</Typography>
             <Typography>
-              Ingress: {Math.round(stats.msgRateIn)} msg/s
+              Ingress: {Math.round(value.msgRateIn)} msg/s
             </Typography>
             <Typography>
-              Egress: {Math.round(stats.msgRateOut)} msg/s
+              Egress: {Math.round(value.msgRateOut)} msg/s
             </Typography>
           </InfoCard>
           <Box>
@@ -95,7 +98,7 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {stats.publishers.map((p, index) => (
+                      {value.publishers.map((p, index) => (
                         <TableRow key={index}>
                           <TableCell>{p.producerName}</TableCell>
                           <TableCell>{p.msgRateIn.toFixed(3)}</TableCell>
@@ -115,7 +118,7 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {Object.entries(stats.subscriptions).map(
+                      {Object.entries(value.subscriptions).map(
                         ([subName, subContent]) => {
                           return (
                             <TableRow key={subName}>
@@ -132,8 +135,6 @@ export const EntityPulsarContent = (props: EntityPulsarContentProps) => {
             </Grid>
           </Box>
         </>
-      ) : (
-        <Typography variant="body1">Error fetching topic stats</Typography>
       )}
     </Content>
   );
