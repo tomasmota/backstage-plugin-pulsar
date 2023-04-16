@@ -44,7 +44,7 @@ async function getTopicStats(
 function getTopicPath(path: string | undefined): TopicPath {
   const pathRegExp: RegExp = /^([^/]+)\/([^/]+)\/([^/]+)$/; // matches the form 'tenant/namespace/topic'
   if (path === undefined || !pathRegExp.test(path)) {
-    throw Error(`Expected an annotation value in the form of {tenant}/{namespace}/{topic}, got: '${path}'`); // make a proper error here, not sure how to display this yet
+    throw Error(`Expected an annotation value in the form of <tenant>/<namespace>/<topic>, got: '${path}'`); // make a proper error here, not sure how to display this yet
   }
   const [tenant, namespace, topic] = path.split('/');
   return { tenant, namespace, topic };
@@ -57,7 +57,8 @@ type TopicPath = {
 };
 
 //TODO: add possiblity to set more than one topic
-export const ANNOTATION_PULSAR_TOPIC = 'backstage.io/pulsar-topic';
+// Or maybe what we what is to select producer or subscription name?
+const ANNOTATION_PULSAR_TOPIC = 'backstage.io/pulsar-topic';
 
 /** @public */
 export const EntityPulsarContent = () => {
