@@ -12,8 +12,9 @@ Welcome to the apache-pulsar plugin!
 - Figure out authentication
 - Decide what data to show
 - Make it look nice
-- Add Annotation for setting up plugin for a given component
 - Allow showing information for several topics (perhaps select from a dropdown?) not sure how to put them in annotations
+- Consider getting the producer and/or subscriber name instead of the topic name(s)
+
 
 ## Questions
 - Is information of both subscriptions and consumers? Or is it usually the case that 1 subscription = 1 consumer?
