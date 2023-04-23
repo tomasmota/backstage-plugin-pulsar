@@ -1,7 +1,7 @@
-import { apachePulsarPlugin } from './plugin';
+import { pulsarPlugin } from './plugin';
 
-describe('apache-pulsar', () => {
+describe('pulsar plugin', () => {
   it('should export plugin', () => {
-    expect(apachePulsarPlugin).toBeDefined();
+    expect(pulsarPlugin).toBeDefined();
   });
 });

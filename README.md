@@ -1,6 +1,6 @@
-# apache-pulsar
+# backstage pulsar plugin
 
-Welcome to the apache-pulsar plugin!
+Welcome to the pulsar plugin!
 
 ## Development setup (WIP)
 - Run pulsar in a container:

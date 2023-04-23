@@ -22,8 +22,10 @@ import {
   WarningPanel,
 } from '@backstage/core-components';
 import useAsync from 'react-use/lib/useAsync';
+import { pulsarApiRef } from '../../api';
+import { useApi } from '@backstage/core-plugin-api';
 
-async function getTopicStats(
+async function getStats(
   tenant: string,
   namespace: string,
   topic: string,
@@ -66,13 +68,16 @@ export const EntityPulsarContent = () => {
   const pulsarAnnotation =
     entity.metadata.annotations?.[ANNOTATION_PULSAR_TOPIC]?.trim();
   const isPulsarConfigured = Boolean(pulsarAnnotation);
+  const pulsarApi = useApi(pulsarApiRef);
 
   const { value, loading, error } = useAsync(async () => {
     if (!isPulsarConfigured) {
       return;
     }
     const tp = getTopicPath(pulsarAnnotation);
-    return getTopicStats(
+    const data = pulsarApi.getTopicStats(tp.tenant, tp.namespace, tp.topic);
+    console.log(data);
+    return getStats(
       tp.tenant ?? 'public',
       tp.namespace ?? 'default',
       tp.topic,

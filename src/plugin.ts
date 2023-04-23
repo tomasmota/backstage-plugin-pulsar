@@ -1,15 +1,28 @@
-import { createPlugin, createRoutableExtension } from '@backstage/core-plugin-api';
+import { createApiFactory, createPlugin, createRoutableExtension, discoveryApiRef, fetchApiRef } from '@backstage/core-plugin-api';
+import { pulsarApiRef, PulsarClient } from './api';
 
 import { rootRouteRef } from './routes';
 
-export const apachePulsarPlugin = createPlugin({
-  id: 'apache-pulsar',
+export const pulsarPlugin = createPlugin({
+  id: 'pulsar',
+  apis: [
+    createApiFactory({
+      api: pulsarApiRef,
+      deps: {
+        discoveryApi: discoveryApiRef,
+        fetchApi: fetchApiRef,
+      },
+      factory({ discoveryApi, fetchApi }) {
+        return new PulsarClient({ discoveryApi, fetchApi });
+      },
+    }),
+  ],
   routes: {
     root: rootRouteRef,
   },
 });
 
-export const EntityPulsarContent = apachePulsarPlugin.provide(
+export const EntityPulsarContent = pulsarPlugin.provide(
   createRoutableExtension({
     name: 'EntityPulsarContent',
     component: () =>
